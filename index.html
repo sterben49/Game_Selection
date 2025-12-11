@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Oyun Çarkı</title>
+
+<style>
+    body {
+        background:#0f0f0f;
+        color:#fff;
+        text-align:center;
+        font-family:Arial;
+    }
+    #wheel {
+        width: 650px;
+        height: 650px;
+        border-radius: 50%;
+        border: 10px solid #555;
+        margin: 40px auto;
+        position: relative;
+        overflow: hidden;
+        transition: transform 8s cubic-bezier(.08,.5,0,1);
+        box-shadow:0 0 30px #000;
+    }
+
+    .slice {
+        position:absolute;
+        width:50%;
+        height:50%;
+        left:50%;
+        top:50%;
+        transform-origin:0 0;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        color:white;
+        font-size:12px;
+        padding:5px;
+        text-align:center;
+        box-sizing:border-box;
+    }
+
+    #spin {
+        padding: 20px 35px;
+        font-size: 22px;
+        cursor:pointer;
+        background:#d90429;
+        color:#fff;
+        border:none;
+        border-radius:15px;
+        margin-top:20px;
+    }
+    #spin:hover {
+        background:#ff003c;
+    }
+
+    #result {
+        font-size:40px;
+        margin-top:25px;
+        color:#00ffbf;
+        text-shadow:0 0 15px #00ffaa;
+    }
+</style>
+
+</head>
+<body>
+
+<h1>Oyun Çarkı</h1>
+
+<div id="wheel"></div>
+<button id="spin">Çevir</button>
+
+<h2 id="result"></h2>
+
+<audio id="sound" src="https://cdn.pixabay.com/audio/2021/08/04/audio_b4e3b0789a.mp3"></audio>
+
+<script>
+const games = [
+"Anomaly Agent","Brotato","Frostpunk","Graveyard Keeper","Human Fall Flat","Lethal Company","Punch Club","Stick Fight: The Game","Terraria",
+"Age of Wonders III","Amnesia: A Machine for Pigs","Amnesia: The Dark Descent","Among Us","Apex Legends","Assetto Corsa","Back 4 Blood","Banana Shooter",
+"Batman Arkham City GOTY","Battlefield 1","Battlerite","Beholder","Beholder 2","Beyond Two Souls","BIGFOOT","Black Desert","Borderlands 2",
+"Boring Man","Brawlhalla","The Bureau XCOM Declassified","Chivalry Medieval Warfare","Cities Skylines","Counter Strike 2","Cry of Fear","Dark and Darker",
+"The Darkness II","Darksiders","Darksiders II","DDNet","Dead by Daylight","Deceit","Destiny 2","Devour","Dishonored","Don't Starve Together",
+"Dying Light","Escape the Backrooms","Estranged","Euro Truck Simulator 2","F1 2015","Fallout","Fallout 4","Fallout 76","Fallout New Vegas",
+"Far Cry Primal","Feign","The Forest","Galactic Civilizations II","Gang Beasts","Garry’s Mod","Getting Over It","GRID 2","Hacknet","Half-Life",
+"Half-Life 2","Half-Life 2 Deathmatch","Half-Life DM Source","Hand Simulator","Hellsalve","Hitman Absolution","Hitman Sniper Challenge","Homefront",
+"Insurgency","Knightfall A Daring Journey","Layers of Fear","Left 4 Dead","Left 4 Dead 2","The Long Dark","Manual Samuel","Metro 2033","Muck",
+"Murderous Pursuits","NBA Playgrounds","Nidhogg","No More Room in Hell","Once Human","One-Armed Robber","Orwell","Outlast 2","The Outlast Trials",
+"Paladins","PICO PARK Classic Edition","Poly Bridge","Portal","Portal 2","POSTAL 2","Prison Architect","Prison Life 2","PES 2016 myClub",
+"Psychonauts","PUBG Battlegrounds","Ranch Simulator","The Red Solstice","R.E.P.O.","Resident Evil 7 Biohazard","Rise of the Tomb Raider",
+"RISK Global Domination","Rocket League","Sanctum 2","Satellite Reign","Shadow Warrior","Shadowrun Returns","Sleeping Dogs Definitive Edition",
+"Sniper Elite 3","Spec Ops The Line","Split Fiction","STALCRAFT X","Stardew Valley","Supermarket Together","SUPERVIVE","Sven Co-op",
+"This War of Mine","Tomb Raider","Vigil","The Walking Dead Telltale","We Were Here","Welcome to the Game","WHAT THE PAK?!","The Witcher 3","Zort"
+];
+
+const wheel = document.getElementById("wheel");
+const result = document.getElementById("result");
+const sound = document.getElementById("sound");
+
+const sliceDeg = 360 / games.length;
+
+// çarkın dilimlerini oluştur
+games.forEach((name, i) => {
+    const slice = document.createElement("div");
+    slice.className = "slice";
+    slice.style.transform = `rotate(${i * sliceDeg}deg) skewY(${90 - sliceDeg}deg)`;
+    slice.style.background = i % 2 === 0 ? "#222" : "#333";
+    slice.innerHTML = name;
+    wheel.appendChild(slice);
+});
+
+// spin
+document.getElementById("spin").onclick = () => {
+    result.textContent = "";
+    const deg = Math.floor(5000 + Math.random() * 5000);
+    wheel.style.transform = `rotate(${deg}deg)`;
+
+    sound.currentTime = 0;
+    sound.play();
+
+    setTimeout(() => {
+        let realDeg = deg % 360;
+        let index = Math.floor((360 - realDeg) / sliceDeg);
+        if (index >= games.length) index = 0;
+        result.textContent = "Seçilen Oyun: " + games[index];
+    }, 8200);
+};
+</script>
+
+</body>
+</html>
